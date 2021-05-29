@@ -57,6 +57,8 @@ MonoBehaviour:
   neighbourNodes: []
   fallingLocation: {fileID: 0}
   nodeID: {x: 0, y: 0}
+  chain: []
+  minimumChainAmount: 2
   image: {fileID: 6555362948122347888}
 --- !u!222 &1289974700543740445
 CanvasRenderer:

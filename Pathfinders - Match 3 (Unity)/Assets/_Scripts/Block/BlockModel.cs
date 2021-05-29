@@ -41,6 +41,7 @@ public class BlockModel : MonoBehaviour
     public void DestroyBlock()
     {
         Destroy(gameObject);
+        Debug.Log(4);
     }
 
 

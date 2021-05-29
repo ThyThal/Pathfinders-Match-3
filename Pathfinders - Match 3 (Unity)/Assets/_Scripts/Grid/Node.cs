@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class Node : MonoBehaviour
 {
@@ -11,15 +12,24 @@ public class Node : MonoBehaviour
     [SerializeField] private List<Node> neighbourNodes;
     [SerializeField] private Node fallingLocation;
     [SerializeField] private Vector2 nodeID;
+    [SerializeField] private List<Node> chain;
+    [SerializeField] private int minimumChainAmount = 3;
 
     [Header("Components")]
     [SerializeField] public Image image;
+
+    /*
+     * Events
+     */
+
+    /*
+     * Properties
+     */
     public Vector2 NodeID 
     {
         get { return nodeID; }
         set { nodeID = value; }
     }
-
     public BlockModel CurrentBlock
     {
         get { return currentBlock; }
@@ -29,17 +39,19 @@ public class Node : MonoBehaviour
     {
         get { return neighbourNodes; }
     }
-
     public bool IsAir
     {
         get { return isAir; }
+        set { isAir = value; }
     }
-
     public Node FallingLocation
     {
         get { return fallingLocation; }
     }
 
+    /*
+     * Methods
+     */
     public void GetNeighbours(List<Node> nodesList)
     {
         int foundAmount = 0;
@@ -62,7 +74,6 @@ public class Node : MonoBehaviour
             }
         }
     }
-
     private Node FindNeighbourID(int currX, int currY, List<Node> nodesList)
     {
         for (int i = 0; i < nodesList.Count; i++)
@@ -76,22 +87,23 @@ public class Node : MonoBehaviour
 
         return null;
     }
-
     public void CreateNewChain()
     {
-        List<Node> chain = new List<Node>();
-        chain.Add(this);
-        CheckForChain(chain, 0);
-        CheckChainSize(chain);
+        chain.Clear();
+        if (IsAir == false)
+        {
+            chain.Add(this);
+            CheckForChain(chain, 0);
+            CheckChainSize(chain);
+        }
     }
-
     private void CheckForChain(List<Node> chainList, int currentNode)
     {
         int currentNodeInChain = currentNode;
 
         foreach (var vecino in chainList[currentNodeInChain].NeighbourNodes)
         {
-            if (vecino != null)
+            if (vecino != null && vecino.currentBlock != null)
             {
                 if (vecino.currentBlock.BlockType == chainList[0].currentBlock.BlockType)
                 {
@@ -117,13 +129,13 @@ public class Node : MonoBehaviour
         }
         
     }
-
     private void CheckChainSize(List<Node> chainList)
     {
-        if (chainList.Count >= 3)
+        if (chainList.Count >= minimumChainAmount)
         {
             RemoveBlocksFromChain(chainList);
-        }
+            chain.Clear();
+        }  
     }
 
     private void RemoveBlocksFromChain(List<Node> chainList)
@@ -133,12 +145,9 @@ public class Node : MonoBehaviour
             node.isAir = true;
             node.CurrentBlock.DestroyBlock();
         }
-    }
 
-    /*
-     * Check if blocks are floating
-     * */
-    [ContextMenu("Check For Space")]
+        GameManager.Instance.match3Grid.isFalling = true;
+    }
     public bool HasSpaceBelow()
     {
         for (int i = 0; i < neighbourNodes.Count; i++)

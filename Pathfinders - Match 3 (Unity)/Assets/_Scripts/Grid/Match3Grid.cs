@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class Match3Grid : MonoBehaviour
 {
@@ -18,11 +19,33 @@ public class Match3Grid : MonoBehaviour
     [Header("Customize")]
     [SerializeField] private Vector2 gridSize = new Vector2(5, 5);
     [SerializeField] private int cellSize = 100;
+    [SerializeField] public bool isFalling;
+    [SerializeField] private float fallingTimeAmount;
+    private float originalFallTimer;
 
     private void Start()
     {
+        originalFallTimer = fallingTimeAmount;
         rectTransform.sizeDelta = new Vector2(gridSize.x * cellSize, gridSize.y * cellSize);
         SpawnNodes();
+    }
+
+    private void Update()
+    {
+        if (isFalling)
+        {
+            fallingTimeAmount -= Time.deltaTime;
+            if (fallingTimeAmount > 0)
+            {
+                SearchFloating();
+            }
+
+            else
+            {
+                isFalling = false;
+                fallingTimeAmount = originalFallTimer;
+            }
+        }
     }
 
     private void SpawnNodes()
@@ -61,8 +84,16 @@ public class Match3Grid : MonoBehaviour
         }
     }
 
-    public void SearchFloatingBlocks()
+
+    public void SearchFloating()
     {
+        StartCoroutine(SearchFloatingBlocks());
+    }
+
+    IEnumerator SearchFloatingBlocks()
+    {
+        yield return new WaitForSeconds(fallingTimeAmount);
+
         for (int i = 0; i < gridNodeArray.Count; i++)
         {
             Node currentNode = gridNodeArray[i];
@@ -71,18 +102,23 @@ public class Match3Grid : MonoBehaviour
             {
                 currentNode.image.color = Color.red;
                 currentNode.FallingLocation.image.color = Color.green;
-
                 DoBlockFall(currentNode, currentNode.FallingLocation);
             }
         }
     }
 
     private void DoBlockFall(Node start, Node finish)
-    {
-        start.CurrentBlock.gameObject.transform.SetParent(finish.transform);
-        start.CurrentBlock.GetComponent<RectTransform>().localPosition = Vector3.zero;
-        start.image.color = Color.clear;
-        finish.image.color = Color.clear;
-        //start.CurrentBlock.DestroyBlock();
+    {        
+        if (start.CurrentBlock != null)
+        {
+            start.CurrentBlock.gameObject.transform.SetParent(finish.transform); // Sets new CurrentBlock Parent.
+            finish.CurrentBlock = finish.GetComponentInChildren<BlockModel>();
+            finish.CurrentBlock.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            finish.IsAir = false;
+            start.IsAir = true;
+            start.CurrentBlock = null;
+            finish.image.color = Color.clear;
+            start.image.color = Color.clear;
+        }
     }
 }
