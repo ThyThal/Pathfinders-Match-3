@@ -164,7 +164,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6418154825715086435}
         m_TargetAssemblyTypeName: Node, Assembly-CSharp
-        m_MethodName: PaintVecinos
+        m_MethodName: CreateNewChain
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

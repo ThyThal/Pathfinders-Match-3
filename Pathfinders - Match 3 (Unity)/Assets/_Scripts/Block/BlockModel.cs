@@ -13,6 +13,11 @@ public class BlockModel : MonoBehaviour
     [Header("Main")]
     [SerializeField] private BLOCK_TYPE blockType;
 
+    public BLOCK_TYPE BlockType
+    {
+        get { return blockType; }
+    }
+
     public enum BLOCK_TYPE
     {
         Air,
@@ -31,6 +36,11 @@ public class BlockModel : MonoBehaviour
         blockType = (BLOCK_TYPE)Random.Range(0, elementsAmount);
 
         blockView.SelectSprite(blockType);
+    }
+
+    public void DestroyBlock()
+    {
+        Destroy(gameObject);
     }
 
 

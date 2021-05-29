@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GridGenerator : MonoBehaviour
+public class Match3Grid : MonoBehaviour
 {
     public List<Node> gridNodeArray;
 
@@ -57,8 +57,12 @@ public class GridGenerator : MonoBehaviour
         for (int i = 0; i < gridNodeArray.Count; i++)
         {
             Node currentNode = gridNodeArray[i];
-            currentNode.GetComponent<Image>().color = Color.yellow;
             currentNode.GetNeighbours(gridNodeArray);
         }
+    }
+
+    public void FindChains()
+    {
+
     }
 }

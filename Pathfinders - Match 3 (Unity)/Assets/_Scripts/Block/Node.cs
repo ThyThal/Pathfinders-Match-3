@@ -14,10 +14,15 @@ public class Node : MonoBehaviour
         set { nodeID = value; }
     }
 
+
     public BlockModel CurrentBlock
     {
         get { return currentBlock; }
         set { currentBlock = value; }
+    }
+    public List<Node> NeighbourNodes
+    {
+        get { return neighbourNodes; }
     }
 
     public void GetNeighbours(List<Node> nodesList)
@@ -32,8 +37,6 @@ public class Node : MonoBehaviour
 
                 if (x == nodeID.x || y == nodeID.y) // Matchs adjacency
                 {
-                    Debug.Log("Found Adjacent Node");
-
                     Node neighbour = FindNeighbourID(x, y, nodesList);
                     if (neighbour != null && foundAmount < 4)
                     {
@@ -64,6 +67,68 @@ public class Node : MonoBehaviour
         foreach (Node node in neighbourNodes)
         {
             node.GetComponent<Image>().color = Color.red;
+        }
+    }
+
+    public void CreateNewChain()
+    {
+        List<Node> chain = new List<Node>();
+        chain.Add(this);
+        this.GetComponent<Image>().color = Color.green;
+
+        CheckForChain(chain, 0);
+        CheckChainSize(chain);
+    }
+
+    private void CheckForChain(List<Node> chainList, int currentNode)
+    {
+        int currentNodeInChain = currentNode;
+
+        foreach (var vecino in chainList[currentNodeInChain].NeighbourNodes)
+        {
+            if (vecino != null)
+            {
+                if (vecino.currentBlock.BlockType == chainList[0].currentBlock.BlockType)
+                {
+                    vecino.GetComponent<Image>().color = Color.blue;
+
+                    for (int i = 0; i < chainList.Count; i++)
+                    {
+                        if (!chainList.Contains(vecino))
+                        {
+                            chainList.Add(vecino);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (currentNodeInChain >= chainList.Count - 1)
+        {
+            Debug.Log("STOP");
+        }
+
+        else
+        {
+            CheckForChain(chainList, currentNodeInChain + 1);
+        }
+        
+    }
+
+    private void CheckChainSize(List<Node> chainList)
+    {
+        if (chainList.Count >= 3)
+        {
+            RemoveBlocksFromChain(chainList);
+        }
+    }
+
+    private void RemoveBlocksFromChain(List<Node> chainList)
+    {
+        foreach (var block in chainList)
+        {
+            block.GetComponent<Image>().color = Color.red;
+            block.CurrentBlock.DestroyBlock();
         }
     }
 }
