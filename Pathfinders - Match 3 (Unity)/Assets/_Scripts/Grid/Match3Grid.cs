@@ -61,8 +61,28 @@ public class Match3Grid : MonoBehaviour
         }
     }
 
-    public void FindChains()
+    public void SearchFloatingBlocks()
     {
+        for (int i = 0; i < gridNodeArray.Count; i++)
+        {
+            Node currentNode = gridNodeArray[i];
 
+            if (currentNode.HasSpaceBelow() && currentNode.IsAir == false)
+            {
+                currentNode.image.color = Color.red;
+                currentNode.FallingLocation.image.color = Color.green;
+
+                DoBlockFall(currentNode, currentNode.FallingLocation);
+            }
+        }
+    }
+
+    private void DoBlockFall(Node start, Node finish)
+    {
+        start.CurrentBlock.gameObject.transform.SetParent(finish.transform);
+        start.CurrentBlock.GetComponent<RectTransform>().localPosition = Vector3.zero;
+        start.image.color = Color.clear;
+        finish.image.color = Color.clear;
+        //start.CurrentBlock.DestroyBlock();
     }
 }

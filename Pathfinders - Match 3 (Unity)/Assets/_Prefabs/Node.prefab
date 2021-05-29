@@ -52,9 +52,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdbec8ebc4fd0b54f8315f157a0f43c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isAir: 0
   currentBlock: {fileID: 0}
-  nodeID: {x: 0, y: 0}
   neighbourNodes: []
+  fallingLocation: {fileID: 0}
+  nodeID: {x: 0, y: 0}
+  image: {fileID: 6555362948122347888}
 --- !u!222 &1289974700543740445
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -76,7 +79,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.1254902}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

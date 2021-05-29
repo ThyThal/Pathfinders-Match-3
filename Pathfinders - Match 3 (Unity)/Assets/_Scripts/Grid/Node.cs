@@ -5,15 +5,20 @@ using UnityEngine.UI;
 
 public class Node : MonoBehaviour
 {
+    [Header("Helpers")]
+    [SerializeField] private bool isAir;
     [SerializeField] private BlockModel currentBlock;
-    [SerializeField] private Vector2 nodeID;
     [SerializeField] private List<Node> neighbourNodes;
+    [SerializeField] private Node fallingLocation;
+    [SerializeField] private Vector2 nodeID;
+
+    [Header("Components")]
+    [SerializeField] public Image image;
     public Vector2 NodeID 
     {
         get { return nodeID; }
         set { nodeID = value; }
     }
-
 
     public BlockModel CurrentBlock
     {
@@ -23,6 +28,16 @@ public class Node : MonoBehaviour
     public List<Node> NeighbourNodes
     {
         get { return neighbourNodes; }
+    }
+
+    public bool IsAir
+    {
+        get { return isAir; }
+    }
+
+    public Node FallingLocation
+    {
+        get { return fallingLocation; }
     }
 
     public void GetNeighbours(List<Node> nodesList)
@@ -62,20 +77,10 @@ public class Node : MonoBehaviour
         return null;
     }
 
-    public void PaintVecinos()
-    {
-        foreach (Node node in neighbourNodes)
-        {
-            node.GetComponent<Image>().color = Color.red;
-        }
-    }
-
     public void CreateNewChain()
     {
         List<Node> chain = new List<Node>();
         chain.Add(this);
-        this.GetComponent<Image>().color = Color.green;
-
         CheckForChain(chain, 0);
         CheckChainSize(chain);
     }
@@ -90,8 +95,6 @@ public class Node : MonoBehaviour
             {
                 if (vecino.currentBlock.BlockType == chainList[0].currentBlock.BlockType)
                 {
-                    vecino.GetComponent<Image>().color = Color.blue;
-
                     for (int i = 0; i < chainList.Count; i++)
                     {
                         if (!chainList.Contains(vecino))
@@ -125,10 +128,33 @@ public class Node : MonoBehaviour
 
     private void RemoveBlocksFromChain(List<Node> chainList)
     {
-        foreach (var block in chainList)
+        foreach (var node in chainList)
         {
-            block.GetComponent<Image>().color = Color.red;
-            block.CurrentBlock.DestroyBlock();
+            node.isAir = true;
+            node.CurrentBlock.DestroyBlock();
         }
+    }
+
+    /*
+     * Check if blocks are floating
+     * */
+    [ContextMenu("Check For Space")]
+    public bool HasSpaceBelow()
+    {
+        for (int i = 0; i < neighbourNodes.Count; i++)
+        {
+            var currentNode = neighbourNodes[i];
+
+            if (currentNode.NodeID.x == NodeID.x + 1 && currentNode.NodeID.y == NodeID.y)
+            {
+                if (currentNode.isAir == true)
+                {
+                    fallingLocation = currentNode;
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
