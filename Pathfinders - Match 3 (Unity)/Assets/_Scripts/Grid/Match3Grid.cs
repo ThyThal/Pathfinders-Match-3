@@ -304,14 +304,14 @@ public class Match3Grid : MonoBehaviour
 
             if (!foundChain)
             {
-                Debug.Log("No Quedan Cadenas");
+                //Debug.Log("No Quedan Cadenas");
                 GameOver();
             }
         }
 
         if (GameManager.Instance.turnsAmount <= 0)
         {
-            Debug.Log("No Hay Mas Turnos");
+            //Debug.Log("No Hay Mas Turnos");
             GameOver();
         }
 
@@ -326,7 +326,7 @@ public class Match3Grid : MonoBehaviour
     IEnumerator GameOverRoutine()
     {
         yield return new WaitForSeconds(0.1f);
-        Debug.Log("Game Over");
+        //Debug.Log("Game Over");
         GameManager.Instance.conditionScreen.gameObject.SetActive(true);
         GameManager.Instance.conditionScreen.ShowMenu();
         DeleteBlocks();

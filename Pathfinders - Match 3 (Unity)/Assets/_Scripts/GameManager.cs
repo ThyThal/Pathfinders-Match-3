@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     [Header("Extras")]
     [SerializeField] public Match3Grid match3Grid;
     [SerializeField] public GameOverScreen conditionScreen;
+    [SerializeField] public ChainSelection chainSelection;
     [SerializeField] public bool startingChain;
     [SerializeField] public bool generatingRandomChains;
     [SerializeField] public bool fallingBlocks;

@@ -288,4 +288,25 @@ public class Node : MonoBehaviour
         isPlayer = true;
         CreateNewChain(false);
     }
+
+    /*
+     * CHAINLINK GAMEPLAY
+     */
+
+    public void StartChain()
+    {
+        GameManager.Instance.chainSelection.StartChain(this, currentBlock.BlockType);
+        image.color = Color.green;
+    }
+
+    public void StopChain()
+    {
+        GameManager.Instance.chainSelection.StopChain();
+    }
+
+    public void CheckChainBlockType()
+    {
+        GameManager.Instance.chainSelection.CheckBlockType(this);
+    }
+
 }

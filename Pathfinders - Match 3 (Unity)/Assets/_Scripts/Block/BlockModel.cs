@@ -42,8 +42,10 @@ public class BlockModel : MonoBehaviour
     {
         if (isPlayer)
         {
-            GameManager.Instance.AddScore(GameManager.Instance.comboScore);
+            GameManager.Instance.AddScore(GameManager.Instance.comboScore*2);
         }
+
+        GameManager.Instance.AddScore(GameManager.Instance.comboScore / 4);
 
         Destroy(gameObject);
     }

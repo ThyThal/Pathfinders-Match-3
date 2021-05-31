@@ -5379,6 +5379,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 830361937}
   m_CullTransparentMesh: 0
+--- !u!114 &963331007 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8220859428773837411, guid: 696a844c315f2474bac20bf91b7c6aea, type: 3}
+  m_PrefabInstance: {fileID: 5112184733145564860}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b72f31947b9eb7447945d753f9223ca5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &991259678 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2843963999460515583, guid: 35c79ec00909c994692e6f584e2641b1, type: 3}
@@ -5804,6 +5815,10 @@ PrefabInstance:
       propertyPath: turnsAmount
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7237397958759087316, guid: 696a844c315f2474bac20bf91b7c6aea, type: 3}
+      propertyPath: chainSelection
+      value: 
+      objectReference: {fileID: 963331007}
     - target: {fileID: 7237397958759087316, guid: 696a844c315f2474bac20bf91b7c6aea, type: 3}
       propertyPath: conditionScreen
       value: 
