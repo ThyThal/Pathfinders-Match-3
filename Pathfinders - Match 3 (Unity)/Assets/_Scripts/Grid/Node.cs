@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Linq;
 
 public class Node : MonoBehaviour
 {
@@ -13,14 +14,12 @@ public class Node : MonoBehaviour
     [SerializeField] private Node fallingLocation;
     [SerializeField] private Vector2 nodeID;
     [SerializeField] private List<Node> chain;
-    [SerializeField] private int minimumChainAmount = 3;
+    [SerializeField] private int minimumChainAmount;
+    [SerializeField] private bool isPlayer;
+    [SerializeField] private bool hasChain;
 
     [Header("Components")]
     [SerializeField] public Image image;
-
-    /*
-     * Events
-     */
 
     /*
      * Properties
@@ -47,6 +46,19 @@ public class Node : MonoBehaviour
     public Node FallingLocation
     {
         get { return fallingLocation; }
+    }
+    public bool HasChain
+    {
+        get { return hasChain; }
+        set { hasChain = value; }
+    }
+
+    /*
+     * MonoBehaviour
+     */
+    private void Start()
+    {
+        minimumChainAmount = GameManager.Instance.chainComboAmount;
     }
 
     /*
@@ -87,14 +99,27 @@ public class Node : MonoBehaviour
 
         return null;
     }
-    public void CreateNewChain()
+    public void CreateNewChain(bool debugMode)
     {
-        chain.Clear();
+        if (chain != null)
+        {
+            ClearChainList();
+        }
+
         if (IsAir == false)
         {
             chain.Add(this);
             CheckForChain(chain, 0);
-            CheckChainSize(chain);
+
+            if (GameManager.Instance.generatingRandomChains)
+            {
+                CheckChainSize(chain, minimumChainAmount - 1, debugMode);
+            }
+
+            else
+            {
+                CheckChainSize(chain, minimumChainAmount, debugMode);
+            }
         }
     }
     private void CheckForChain(List<Node> chainList, int currentNode)
@@ -120,7 +145,7 @@ public class Node : MonoBehaviour
 
         if (currentNodeInChain >= chainList.Count - 1)
         {
-            Debug.Log("STOP");
+
         }
 
         else
@@ -129,13 +154,61 @@ public class Node : MonoBehaviour
         }
         
     }
-    private void CheckChainSize(List<Node> chainList)
+    private void CheckChainSize(List<Node> chainList, int chainSize, bool debugMode)
     {
-        if (chainList.Count >= minimumChainAmount)
+        if (chainList.Count >= chainSize)
         {
-            RemoveBlocksFromChain(chainList);
-            chain.Clear();
-        }  
+            if (GameManager.Instance.startingChain == true) // Primera Generacion de Grilla
+            {
+                RandomizeType();
+            }
+
+            if (GameManager.Instance.startingChain == false)
+            {
+                if (GameManager.Instance.generatingRandomChains == true)
+                {
+                    if (chainSize != minimumChainAmount)
+                    {
+                        foreach (var node in chainList)
+                        {
+                            if (node.CurrentBlock != chainList[0])
+                            {
+                                int randomVecino = UnityEngine.Random.Range(0, node.NeighbourNodes.Count - 1);
+                                Node vecino = node.NeighbourNodes[randomVecino];
+
+                                vecino.CurrentBlock.BlockType = chainList[0].CurrentBlock.BlockType;
+                            }
+                        }
+
+                        GameManager.Instance.maximumStartingCombos--;
+                    }
+                }
+
+                else
+                {
+                    if (debugMode)
+                    {
+                        hasChain = true;
+                        DebugPaintChain();
+                    }
+
+                    else
+                    {
+                        
+                        ClearSuccessfulChain(chainList);
+                    }
+                }
+
+            }
+
+            ClearChainList();
+        }
+    }
+
+    private void ClearSuccessfulChain(List<Node> chainList)
+    {
+        RemoveBlocksFromChain(chainList);
+        ClearChainList();
     }
 
     private void RemoveBlocksFromChain(List<Node> chainList)
@@ -144,10 +217,21 @@ public class Node : MonoBehaviour
         {
             node.isAir = true;
             node.CurrentBlock.DestroyBlock();
+            node.CurrentBlock = null;
+        }
+
+        ClearChainList();
+
+        if (isPlayer)
+        {
+            GameManager.Instance.UseTurn();
+            isPlayer = false;
         }
 
         GameManager.Instance.match3Grid.isFalling = true;
     }
+
+    [ContextMenu("Check Space")]
     public bool HasSpaceBelow()
     {
         for (int i = 0; i < neighbourNodes.Count; i++)
@@ -159,11 +243,49 @@ public class Node : MonoBehaviour
                 if (currentNode.isAir == true)
                 {
                     fallingLocation = currentNode;
+                    ClearChainList();
                     return true;
                 }
             }
         }
 
+
+
         return false;
+    }
+
+    public void ClearChainList()
+    {
+        chain.Clear();
+    }
+    private void RandomizeType()
+    {
+        List<int> blockTypes = new List<int> {0,1,2,3,4,5,6,7};
+        List<int> usedTypes = new List<int>();
+        List<int> freeTypes = blockTypes.Except(usedTypes).ToList();
+
+        for (int i = 0; i < neighbourNodes.Count; i++) // Get all elements adyacent.
+        {
+            usedTypes.Add((int)neighbourNodes[i].CurrentBlock.BlockType);
+        }
+
+        var randomType = UnityEngine.Random.Range(0, freeTypes.Count);
+        CurrentBlock.BlockType = (BlockModel.BLOCK_TYPE)randomType;
+
+        CreateNewChain(false);
+    }
+
+    private void DebugPaintChain()
+    {
+        for (int i = 0; i < chain.Count; i++)
+        {
+            chain[i].image.color = Color.green;
+        }
+    }
+
+    public void IsPlayer()
+    {
+        isPlayer = true;
+        CreateNewChain(false);
     }
 }

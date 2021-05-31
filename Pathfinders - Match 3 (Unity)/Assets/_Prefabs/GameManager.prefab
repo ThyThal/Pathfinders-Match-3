@@ -44,6 +44,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48d83ca840a20be46bac9f95d91bc24b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridSize: {x: 10, y: 10}
+  chainComboAmount: 3
+  maximumStartingCombos: 5
+  turnsAmount: 5
+  comboScore: 10
+  match3Grid: {fileID: 0}
+  startingChain: 1
+  generatingRandomChains: 0
+  fallingBlocks: 0
+  generatingNewBlocks: 0
+  textTurns: {fileID: 0}
+  score: {fileID: 0}
+  scoreTotal: 0
 --- !u!114 &8220859428773837411
 MonoBehaviour:
   m_ObjectHideFlags: 0

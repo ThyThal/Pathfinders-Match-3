@@ -59,6 +59,7 @@ MonoBehaviour:
   nodeID: {x: 0, y: 0}
   chain: []
   minimumChainAmount: 2
+  isPlayer: 0
   image: {fileID: 6555362948122347888}
 --- !u!222 &1289974700543740445
 CanvasRenderer:
@@ -169,11 +170,23 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6418154825715086435}
         m_TargetAssemblyTypeName: Node, Assembly-CSharp
-        m_MethodName: CreateNewChain
+        m_MethodName: IsPlayer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: Node, Assembly-CSharp
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

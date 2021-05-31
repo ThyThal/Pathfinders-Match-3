@@ -16,6 +16,7 @@ public class BlockModel : MonoBehaviour
     public BLOCK_TYPE BlockType
     {
         get { return blockType; }
+        set { blockType = value; blockView.SelectSprite(BlockType); }
     }
 
     public enum BLOCK_TYPE
@@ -40,8 +41,8 @@ public class BlockModel : MonoBehaviour
 
     public void DestroyBlock()
     {
+        GameManager.Instance.AddScore(GameManager.Instance.comboScore);
         Destroy(gameObject);
-        Debug.Log(4);
     }
 
 
