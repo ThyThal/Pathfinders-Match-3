@@ -11,6 +11,8 @@ public class Match3Grid : MonoBehaviour
     [Header("Components")]
     [SerializeField] private GridLayoutGroup gridLayoutGroup;
     [SerializeField] private RectTransform rectTransform;
+    [SerializeField] private GameObject screenBlocker;
+    [SerializeField] private BlockScreen blockScreen;
 
     [Header("Prefabs")]
     [SerializeField] private GameObject nodePrefab;
@@ -21,17 +23,27 @@ public class Match3Grid : MonoBehaviour
     [SerializeField] public bool isFalling;
     [SerializeField] private float fallingTimeAmount;
     [SerializeField] private List<Node> updatedFalling;
+
+    [Header("Player Settings")]
+    [SerializeField] private bool playerTurn;
+    [SerializeField] private float playerTurnTimer = 1f;
+    [SerializeField] private float blockScreenTimer = 1f;
+    [SerializeField] private bool endTurn = false;
+
     private Vector2 gridSize;
+
     private float originalFallTimer;
-    private int originalStartingCombos;
+    private float originalBlockTimer;
 
     [SerializeField] private List<Node> availableAux = new List<Node>();
 
     private void Start()
     {
-        gridSize = GameManager.Instance.gridSize;
         originalFallTimer = fallingTimeAmount;
-        originalStartingCombos = GameManager.Instance.maximumStartingCombos;
+        originalBlockTimer = blockScreenTimer;
+
+
+        gridSize = GameManager.Instance.gridSize;
         rectTransform.sizeDelta = new Vector2(gridSize.x * cellSize, gridSize.y * cellSize);
         SpawnNodes();
     }
@@ -40,6 +52,11 @@ public class Match3Grid : MonoBehaviour
     {
         if (isFalling)
         {
+            blockScreen.StartParticles();
+
+            playerTurn = false;
+            blockScreenTimer = originalBlockTimer; // Reset Screen Block Timer.
+
             fallingTimeAmount -= Time.deltaTime;
             if (fallingTimeAmount > 0)
             {
@@ -54,6 +71,25 @@ public class Match3Grid : MonoBehaviour
                 DoBlockRegeneration();
             }
         }
+
+        if (!isFalling && !playerTurn)
+        {
+            blockScreenTimer -= Time.deltaTime;
+            screenBlocker.SetActive(true);
+
+            if (blockScreenTimer <= 0)
+            {
+                blockScreen.StopParticles();
+                playerTurn = true;
+                endTurn = true;
+            }
+        }
+
+        if (!isFalling && endTurn == true)
+        {
+            endTurn = false;
+            CheckForLose();
+        }
     }
 
     /*
@@ -61,17 +97,17 @@ public class Match3Grid : MonoBehaviour
      */
     private void SpawnNodes()
     {
-        //float totalBlockAmount = (gridSize.x * gridSize.y);
         for (int x = 0; x < gridSize.x; x++)
         {
             for (int y = 0; y < gridSize.y; y++)
             {
                 var node = Instantiate(nodePrefab, gridLayoutGroup.transform);
                 node.name = "Node: " + $"[{x},{y}]";
-
                 Node nodeComponent = node.GetComponent<Node>();
                 nodeComponent.NodeID = new Vector2(x, y);
                 gridNodeArray.Add(node.GetComponent<Node>());
+
+                // Spawn Block
                 nodeComponent.CurrentBlock = SpawnBlock(node.transform);
 
             }
@@ -152,7 +188,7 @@ public class Match3Grid : MonoBehaviour
         for (int i = 0; i < gridNodeArray.Count; i++)
         {
             Node currentNode = gridNodeArray[i];
-            currentNode.image.color = Color.clear;
+            //currentNode.image.color = Color.clear;
             if (currentNode.HasSpaceBelow() && currentNode.IsAir == false)
             {
                 DoBlockFall(currentNode, currentNode.FallingLocation);
@@ -243,37 +279,96 @@ public class Match3Grid : MonoBehaviour
     {
         for (int i = 0; i < gridNodeArray.Count; i++)
         {
-            gridNodeArray[i].image.color = Color.clear;
+            //gridNodeArray[i].image.color = Color.clear;
             gridNodeArray[i].CreateNewChain(true);
+        }
+    }
+
+    [ContextMenu("Check No Chains")]
+    private void CheckForLose()
+    {
+        bool foundChain = false;
+
+        if (GameManager.Instance.turnsAmount > 0)
+        {
+            for (int i = 0; i < gridNodeArray.Count; i++)
+            {
+                gridNodeArray[i].HasChain = false;
+
+                if (foundChain == false)
+                {
+                    gridNodeArray[i].CreateNewChain(true);
+                    foundChain = gridNodeArray[i].HasChain;
+                }
+            }
+
+            if (!foundChain)
+            {
+                Debug.Log("No Quedan Cadenas");
+                GameOver();
+            }
+        }
+
+        if (GameManager.Instance.turnsAmount <= 0)
+        {
+            Debug.Log("No Hay Mas Turnos");
+            GameOver();
         }
 
 
     }
 
-    [ContextMenu("Check No Chains")]
-    private void CheckForNoChains()
+    private void GameOver()
     {
-        bool foundChain = false;
+        StartCoroutine(GameOverRoutine());
+    }
 
+    IEnumerator GameOverRoutine()
+    {
+        yield return new WaitForSeconds(0.1f);
+        Debug.Log("Game Over");
+        GameManager.Instance.conditionScreen.gameObject.SetActive(true);
+        GameManager.Instance.conditionScreen.ShowMenu();
+        DeleteBlocks();
+    }
+
+    private void DeleteBlocks()
+    {
         for (int i = 0; i < gridNodeArray.Count; i++)
         {
-            gridNodeArray[i].HasChain = false;
-
-            if (foundChain == false)
-            {
-                gridNodeArray[i].CreateNewChain(true);
-                foundChain = gridNodeArray[i].HasChain;
-            }
+            gridNodeArray[i].CurrentBlock.DestroyBlock(false);
         }
+    }
 
-        if (foundChain)
+    /*
+     * RESETING GAME
+     */
+
+    [ContextMenu("Reset Game")]
+    public void ResetGame()
+    {
+        // Timers
+        fallingTimeAmount = originalFallTimer;
+        blockScreenTimer = originalBlockTimer;
+
+        // Bools
+        endTurn = false;
+
+        // Spawning
+        //SpawnNodes();
+        ResetBlocks();
+    }
+
+    
+    private void ResetBlocks()
+    {
+        for (int i = 0; i < gridNodeArray.Count; i++)
         {
-            Debug.Log("Found Chain");
+            var currentNode = gridNodeArray[i];
+            currentNode.CurrentBlock = SpawnBlock(currentNode.transform);
+            currentNode.IsAir = false;
         }
 
-        if (!foundChain)
-        {
-            Debug.Log("Game Over");
-        }
+        CheckChains();
     }
 }

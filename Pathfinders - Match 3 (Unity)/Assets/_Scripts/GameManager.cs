@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Extras")]
     [SerializeField] public Match3Grid match3Grid;
+    [SerializeField] public GameOverScreen conditionScreen;
     [SerializeField] public bool startingChain;
     [SerializeField] public bool generatingRandomChains;
     [SerializeField] public bool fallingBlocks;
@@ -38,11 +39,13 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Text textTurns;
     [SerializeField] private Text score;
-    [SerializeField] private int scoreTotal;
+    [SerializeField] public int scoreTotal;
     private int originalTurns;
+    private int originalCombos;
 
     private void Start()
     {
+        originalCombos = maximumStartingCombos;
         originalTurns = turnsAmount;
         textTurns.text = $"{turnsAmount}";
         score.text = $"{0}";
@@ -62,5 +65,23 @@ public class GameManager : MonoBehaviour
     {
         scoreTotal += amount;
         score.text = score.text = $"{scoreTotal}";
+    }
+
+    [ContextMenu("Reset Game")]
+    public void ResetGame()
+    {
+        // Variables
+        startingChain = true;
+        maximumStartingCombos = originalCombos;
+        turnsAmount = originalTurns;
+        scoreTotal = 0;
+
+        // UI
+        textTurns.text = $"{turnsAmount}";
+        score.text = score.text = $"{scoreTotal}";
+
+        // Grid
+        match3Grid.ResetGame();
+        conditionScreen.HideMenu();
     }
 }

@@ -8,7 +8,6 @@ public class BlockModel : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private BlockView blockView;
-    [SerializeField] private BlockController blockController;
 
     [Header("Main")]
     [SerializeField] private BLOCK_TYPE blockType;
@@ -39,9 +38,13 @@ public class BlockModel : MonoBehaviour
         blockView.SelectSprite(blockType);
     }
 
-    public void DestroyBlock()
+    public void DestroyBlock(bool isPlayer)
     {
-        GameManager.Instance.AddScore(GameManager.Instance.comboScore);
+        if (isPlayer)
+        {
+            GameManager.Instance.AddScore(GameManager.Instance.comboScore);
+        }
+
         Destroy(gameObject);
     }
 

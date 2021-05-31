@@ -216,7 +216,7 @@ public class Node : MonoBehaviour
         foreach (var node in chainList)
         {
             node.isAir = true;
-            node.CurrentBlock.DestroyBlock();
+            node.CurrentBlock.DestroyBlock(isPlayer);
             node.CurrentBlock = null;
         }
 
@@ -279,7 +279,7 @@ public class Node : MonoBehaviour
     {
         for (int i = 0; i < chain.Count; i++)
         {
-            chain[i].image.color = Color.green;
+            //chain[i].image.color = Color.green;
         }
     }
 

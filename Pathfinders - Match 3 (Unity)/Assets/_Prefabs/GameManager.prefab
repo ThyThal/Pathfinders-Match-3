@@ -47,7 +47,7 @@ MonoBehaviour:
   gridSize: {x: 10, y: 10}
   chainComboAmount: 3
   maximumStartingCombos: 5
-  turnsAmount: 5
+  turnsAmount: 3
   comboScore: 10
   match3Grid: {fileID: 0}
   startingChain: 1
