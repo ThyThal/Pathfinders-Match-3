@@ -26,13 +26,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] public Vector2 gridSize = new Vector2(10, 10);
     [SerializeField] public int chainComboAmount = 3;
     [SerializeField] public int maximumStartingCombos = 3;
-    [SerializeField] public int turnsAmount = 5;
+    [SerializeField] public float turnsAmount = 5;
     [SerializeField] public int comboScore = 10;
 
     [Header("Extras")]
     [SerializeField] public Match3Grid match3Grid;
     [SerializeField] public GameOverScreen conditionScreen;
     [SerializeField] public ChainSelection chainSelection;
+    [SerializeField] public AudioSource audioSource;
     [SerializeField] public bool startingChain;
     [SerializeField] public bool generatingRandomChains;
     [SerializeField] public bool fallingBlocks;
@@ -41,7 +42,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text textTurns;
     [SerializeField] private Text score;
     [SerializeField] public int scoreTotal;
-    private int originalTurns;
+    private float originalTurns;
     private int originalCombos;
 
     private void Start()
@@ -59,6 +60,12 @@ public class GameManager : MonoBehaviour
         {
             turnsAmount--;
             textTurns.text = $"{turnsAmount}";
+
+            float percent = ((turnsAmount) / (originalTurns)) * 100;
+            if (percent < 25 || turnsAmount <= 1)
+            {
+                audioSource.pitch = 1.2f;
+            }
         }
     }
 
@@ -76,6 +83,7 @@ public class GameManager : MonoBehaviour
         maximumStartingCombos = originalCombos;
         turnsAmount = originalTurns;
         scoreTotal = 0;
+        audioSource.pitch = 1;
 
         // UI
         textTurns.text = $"{turnsAmount}";

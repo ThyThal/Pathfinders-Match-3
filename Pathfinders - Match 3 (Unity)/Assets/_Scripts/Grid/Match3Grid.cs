@@ -320,6 +320,7 @@ public class Match3Grid : MonoBehaviour
 
     private void GameOver()
     {
+
         StartCoroutine(GameOverRoutine());
     }
 
@@ -329,6 +330,7 @@ public class Match3Grid : MonoBehaviour
         //Debug.Log("Game Over");
         GameManager.Instance.conditionScreen.gameObject.SetActive(true);
         GameManager.Instance.conditionScreen.ShowMenu();
+        GameManager.Instance.audioSource.pitch = 1;
         DeleteBlocks();
     }
 
