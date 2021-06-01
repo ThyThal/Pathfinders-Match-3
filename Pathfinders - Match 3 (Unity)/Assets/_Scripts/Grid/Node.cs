@@ -58,7 +58,7 @@ public class Node : MonoBehaviour
      */
     private void Start()
     {
-        minimumChainAmount = GameManager.Instance.chainComboAmount;
+        minimumChainAmount = GameManager.Instance.ChainComboAmount;
     }
 
     /*
@@ -111,7 +111,7 @@ public class Node : MonoBehaviour
             chain.Add(this);
             CheckForChain(chain, 0);
 
-            if (GameManager.Instance.generatingRandomChains)
+            if (GameManager.Instance.GeneratingRandomChains)
             {
                 CheckChainSize(chain, minimumChainAmount - 1, debugMode);
             }
@@ -158,14 +158,14 @@ public class Node : MonoBehaviour
     {
         if (chainList.Count >= chainSize)
         {
-            if (GameManager.Instance.startingChain == true) // Primera Generacion de Grilla
+            if (GameManager.Instance.StartingChain == true) // Primera Generacion de Grilla
             {
                 RandomizeType();
             }
 
-            if (GameManager.Instance.startingChain == false)
+            if (GameManager.Instance.StartingChain == false)
             {
-                if (GameManager.Instance.generatingRandomChains == true)
+                if (GameManager.Instance.GeneratingRandomChains == true)
                 {
                     if (chainSize != minimumChainAmount)
                     {
@@ -180,7 +180,7 @@ public class Node : MonoBehaviour
                             }
                         }
 
-                        GameManager.Instance.maximumStartingCombos--;
+                        GameManager.Instance.MaxStartingCombos--;
                     }
                 }
 
@@ -194,9 +194,9 @@ public class Node : MonoBehaviour
 
                     else
                     {
-                        if (GameManager.Instance.enableChainedCombos && GameManager.Instance.maxChainedCombo > 0)
+                        if (GameManager.Instance.EnableChainedCombos && GameManager.Instance.MaxChainedCombo > 0)
                         {
-                            GameManager.Instance.maxChainedCombo--;
+                            GameManager.Instance.MaxChainedCombo--;
                             ClearSuccessfulChain(chainList);
                         }
                     }
@@ -282,7 +282,7 @@ public class Node : MonoBehaviour
     {
         for (int i = 0; i < chain.Count; i++)
         {
-            if (GameManager.Instance.usedHelp == true)
+            if (GameManager.Instance.UsedHelp == true)
             {
                 chain[i].image.color = Color.gray; // Helping Paint.
             }

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -22,91 +20,161 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    [Header("Customization")]
-    [SerializeField] public Vector2 gridSize = new Vector2(10, 10);
-    [SerializeField] public int chainComboAmount = 3;
-    [SerializeField] public int maximumStartingCombos = 3;
-    [SerializeField] public float turnsAmount = 5;
-    [SerializeField] public int comboScore = 10;
+    [Header("Starting Configuration")]
+    [SerializeField] private Vector2 gridSize = new Vector2(10, 10);//
+    [SerializeField] private int maxStartingCombos = 3;//
+    [SerializeField] private int chainComboAmount = 3;//
+    [SerializeField] private float turnsAmount = 5;//
+    [SerializeField] private int comboScore = 10;//
 
     [Header("Chains Configuration")]
-    [SerializeField] public bool enableChainedCombos = true;
-    [SerializeField] public int maxChainedCombo = 2;
+    [SerializeField] private bool enableChainedCombos = true;//
+    [SerializeField] private int maxChainedCombo = 2;//
 
-    [Header("Extras")]
+    [Header("Components")]
     [SerializeField] public Match3Grid match3Grid;
     [SerializeField] public GameOverScreen conditionScreen;
     [SerializeField] public ChainSelection chainSelection;
     [SerializeField] public AudioSource audioSource;
     [SerializeField] public AudioSource helpSource;
-    [SerializeField] private AudioClip helpClip;
-    [SerializeField] public bool startingChain;
-    [SerializeField] public bool generatingRandomChains;
-    [SerializeField] public bool fallingBlocks;
-    [SerializeField] public bool generatingNewBlocks;
+    [SerializeField] private AudioClip helpClip;//
+    [SerializeField] private Text textTurns;//
+    [SerializeField] private Text score;//
 
-    [SerializeField] private Text textTurns;
-    [SerializeField] private Text score;
-    [SerializeField] public int scoreTotal;
+    [Header("Variables")]
+    [SerializeField] private bool startingChain = true;//
+    [SerializeField] private bool generatingRandomChains = false;//
+    [SerializeField] private bool fallingBlocks = false;//
+    [SerializeField] private bool generatingNewBlocks = false;//
+    [SerializeField] private bool usedHelp = false;//
+    [SerializeField] private int scoreTotal = 0;//
 
-    public bool usedHelp;
-    private int originalChainedCombos;
-    private float originalTurns;
-    private int originalCombos;
+    // Original Values
+    private int originalChainedCombos;//
+    private float originalTurns;//
+    private int originalCombos;//
 
     private void Start()
     {
+        // Original Values
         originalChainedCombos = maxChainedCombo;
-        originalCombos = maximumStartingCombos;
+        originalCombos = maxStartingCombos;
         originalTurns = turnsAmount;
-        textTurns.text = $"{turnsAmount}";
-        score.text = $"{0}";
+
+        textTurns.text = $"{TurnsAmount}";
+        score.text = $"{ScoreTotal}";
+    }
+
+    /*
+     * Properties
+     */
+    public Vector2 GridSize
+    {
+        get { return gridSize; }
+    }
+    public int ChainComboAmount
+    {
+        get { return chainComboAmount; }
+        set { chainComboAmount = value; }
+    }
+    public int MaxStartingCombos
+    {
+        get { return maxStartingCombos; }
+        set { maxStartingCombos = value; }
+    }
+    public float TurnsAmount
+    {
+        get { return turnsAmount; }
+        set { turnsAmount = value; }
+    }
+    public int ComboScore
+    {
+        get { return comboScore; }
+    }
+    public bool UsedHelp
+    {
+        get { return usedHelp; }
+        set { usedHelp = value; }
+    }
+    public bool StartingChain
+    {
+        get { return startingChain; }
+        set { startingChain = value; }
+    }
+    public bool GeneratingRandomChains
+    {
+        get { return generatingRandomChains; }
+        set { generatingRandomChains = value; }
+    }
+    public bool FallingBlocks
+    {
+        get { return fallingBlocks; }
+        set { fallingBlocks = value; }
+    }
+    public bool GeneratingNewBlocks
+    {
+        get { return generatingNewBlocks; }
+        set { generatingNewBlocks = value; }
+    }
+    public int ScoreTotal
+    {
+        get { return scoreTotal; }
+        set { scoreTotal = value; }
+    }
+    public bool EnableChainedCombos
+    {
+        get { return enableChainedCombos; }
+    }
+    public int MaxChainedCombo
+    {
+        get { return maxChainedCombo; }
+        set { maxChainedCombo = value; }
     }
 
 
+    /*
+     * Methods
+     */
     public void UseTurn()
     {
-        maxChainedCombo = originalChainedCombos;
+        MaxChainedCombo = originalChainedCombos;
 
-        if (turnsAmount > 0)
+        if (TurnsAmount > 0)
         {
-            turnsAmount--;
-            textTurns.text = $"{turnsAmount}";
+            TurnsAmount--;
+            textTurns.text = $"{TurnsAmount}";
 
-            float percent = ((turnsAmount) / (originalTurns)) * 100;
-            if (percent < 25 || turnsAmount <= 1)
+            float percent = ((TurnsAmount) / (originalTurns)) * 100;
+            if (percent < 25 || TurnsAmount <= 1)
             {
                 audioSource.pitch = 1.2f;
             }
         }
     }
-
     public void AddScore(int amount)
     {
-        scoreTotal += amount;
+        ScoreTotal += amount;
         score.text = score.text = $"{scoreTotal}";
     }
-
-    [ContextMenu("Reset Game")]
     public void ResetGame()
     {
         // Variables
-        startingChain = true;
-        maximumStartingCombos = originalCombos;
         maxChainedCombo = originalChainedCombos;
+        maxStartingCombos = originalCombos;
         turnsAmount = originalTurns;
-        scoreTotal = 0;
+
+        StartingChain = true;
+        ScoreTotal = 0;
         audioSource.pitch = 1;
 
         // UI
-        textTurns.text = $"{turnsAmount}";
-        score.text = score.text = $"{scoreTotal}";
+        textTurns.text = $"{TurnsAmount}";
+        score.text = $"{ScoreTotal}";
 
         // Grid
         match3Grid.ResetGame();
         conditionScreen.HideMenu();
     }
-
     public void PlayHelpSound()
     {
         helpSource.PlayOneShot(helpClip);

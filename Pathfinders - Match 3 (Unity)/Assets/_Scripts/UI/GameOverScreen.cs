@@ -15,7 +15,7 @@ public class GameOverScreen : MonoBehaviour
     {
         gameInfo.SetActive(false);
         gameBoard.enabled = false;
-        score.text = GameManager.Instance.scoreTotal.ToString();
+        score.text = GameManager.Instance.ScoreTotal.ToString();
     }
 
     [ContextMenu("Show Screen")]

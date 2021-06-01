@@ -42,7 +42,7 @@ public class Match3Grid : MonoBehaviour
         originalBlockTimer = blockScreenTimer;
 
 
-        gridSize = GameManager.Instance.gridSize;
+        gridSize = GameManager.Instance.GridSize;
         rectTransform.sizeDelta = new Vector2(gridSize.x * cellSize, gridSize.y * cellSize);
         SpawnNodes();
     }
@@ -102,7 +102,7 @@ public class Match3Grid : MonoBehaviour
             gridNodeArray[i].CreateNewChain(false); // Check for chains and remove them.
         }
 
-        GameManager.Instance.startingChain = false;
+        GameManager.Instance.StartingChain = false;
         GenerateRandomChains();
     }
     private void SpawnNodes()
@@ -146,9 +146,9 @@ public class Match3Grid : MonoBehaviour
     }
     private void GenerateRandomChains()
     {
-        GameManager.Instance.generatingRandomChains = true;
+        GameManager.Instance.GeneratingRandomChains = true;
 
-        if (GameManager.Instance.maximumStartingCombos > 0 && availableAux.Count > 0)
+        if (GameManager.Instance.MaxStartingCombos > 0 && availableAux.Count > 0)
         {
             var randomInt = UnityEngine.Random.Range(0, availableAux.Count - 1);
             Node randomNode = availableAux[randomInt];
@@ -158,9 +158,9 @@ public class Match3Grid : MonoBehaviour
             GenerateRandomChains();
         }
 
-        if (GameManager.Instance.maximumStartingCombos <= 0)
+        if (GameManager.Instance.MaxStartingCombos <= 0)
         {
-            GameManager.Instance.generatingRandomChains = false;
+            GameManager.Instance.GeneratingRandomChains = false;
         }
     }
 
@@ -171,7 +171,7 @@ public class Match3Grid : MonoBehaviour
     IEnumerator SearchFloatingBlocks()
     {
         yield return new WaitForSeconds(fallingTimeAmount);
-        GameManager.Instance.usedHelp = false;
+        GameManager.Instance.UsedHelp = false;
 
         for (int i = 0; i < gridNodeArray.Count; i++)
         {
@@ -264,7 +264,7 @@ public class Match3Grid : MonoBehaviour
     [ContextMenu("Button Paint")]
     public void PaintRandomChain()
     {
-        GameManager.Instance.usedHelp = true;
+        GameManager.Instance.UsedHelp = true;
 
         for (int i = 0; i < gridNodeArray.Count; i++)
         {
@@ -293,7 +293,7 @@ public class Match3Grid : MonoBehaviour
     {
         bool foundChain = false;
 
-        if (GameManager.Instance.turnsAmount > 0)
+        if (GameManager.Instance.TurnsAmount > 0)
         {
             for (int i = 0; i < gridNodeArray.Count; i++)
             {
@@ -314,7 +314,7 @@ public class Match3Grid : MonoBehaviour
             }
         }
 
-        if (GameManager.Instance.turnsAmount <= 0)
+        if (GameManager.Instance.TurnsAmount <= 0)
         {
             //Debug.Log("No Hay Mas Turnos");
             GameOver();

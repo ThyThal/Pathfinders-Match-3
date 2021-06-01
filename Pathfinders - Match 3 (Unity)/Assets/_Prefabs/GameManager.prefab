@@ -48,8 +48,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSize: {x: 10, y: 10}
+  maxStartingCombos: 3
   chainComboAmount: 3
-  maximumStartingCombos: 5
   turnsAmount: 3
   comboScore: 10
   enableChainedCombos: 1
@@ -60,14 +60,14 @@ MonoBehaviour:
   audioSource: {fileID: 1901115538}
   helpSource: {fileID: 2632697488745991994}
   helpClip: {fileID: 8300000, guid: 4b4dd7245f6104c8c8eb07ccf6b386ed, type: 3}
+  textTurns: {fileID: 0}
+  score: {fileID: 0}
   startingChain: 1
   generatingRandomChains: 0
   fallingBlocks: 0
   generatingNewBlocks: 0
-  textTurns: {fileID: 0}
-  score: {fileID: 0}
-  scoreTotal: 0
   usedHelp: 0
+  scoreTotal: 0
 --- !u!114 &8220859428773837411
 MonoBehaviour:
   m_ObjectHideFlags: 0

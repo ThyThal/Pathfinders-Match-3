@@ -50,7 +50,7 @@ public class ChainSelection : MonoBehaviour
 
     public void StopChain()
     {
-        if (chainedNodes.Count >= GameManager.Instance.chainComboAmount)
+        if (chainedNodes.Count >= GameManager.Instance.ChainComboAmount)
         {
             PlayAudio(chainAudio);
             RemoveFromChain();
