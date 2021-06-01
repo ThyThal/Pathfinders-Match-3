@@ -76,7 +76,7 @@ public class ChainSelection : MonoBehaviour
         startedChain = false;
         chainedNodes.Clear();
         GameManager.Instance.UseTurn();
-        GameManager.Instance.match3Grid.isFalling = true;
+        GameManager.Instance.match3Grid.IsFalling = true;
     }
     private void RemovePaint()
     {

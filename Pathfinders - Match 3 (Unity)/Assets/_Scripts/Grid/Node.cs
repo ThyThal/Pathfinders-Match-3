@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
-using System.Linq;
 
 public class Node : MonoBehaviour
 {
@@ -20,6 +18,14 @@ public class Node : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] public Image image;
+
+    /*
+     * MonoBehaviour
+     */
+    private void Start()
+    {
+        minimumChainAmount = GameManager.Instance.ChainComboAmount;
+    }
 
     /*
      * Properties
@@ -51,14 +57,6 @@ public class Node : MonoBehaviour
     {
         get { return hasChain; }
         set { hasChain = value; }
-    }
-
-    /*
-     * MonoBehaviour
-     */
-    private void Start()
-    {
-        minimumChainAmount = GameManager.Instance.ChainComboAmount;
     }
 
     /*
@@ -207,13 +205,11 @@ public class Node : MonoBehaviour
             ClearChainList();
         }
     }
-
     private void ClearSuccessfulChain(List<Node> chainList)
     {
         RemoveBlocksFromChain(chainList);
         ClearChainList();
     }
-
     private void RemoveBlocksFromChain(List<Node> chainList)
     {
         foreach (var node in chainList)
@@ -231,10 +227,8 @@ public class Node : MonoBehaviour
             isPlayer = false;
         }
 
-        GameManager.Instance.match3Grid.isFalling = true;
+        GameManager.Instance.match3Grid.IsFalling = true;
     }
-
-    [ContextMenu("Check Space")]
     public bool HasSpaceBelow()
     {
         for (int i = 0; i < neighbourNodes.Count; i++)
@@ -256,7 +250,6 @@ public class Node : MonoBehaviour
 
         return false;
     }
-
     public void ClearChainList()
     {
         chain.Clear();
@@ -277,7 +270,6 @@ public class Node : MonoBehaviour
 
         CreateNewChain(false);
     }
-
     private void DebugPaintChain()
     {
         for (int i = 0; i < chain.Count; i++)
@@ -288,7 +280,6 @@ public class Node : MonoBehaviour
             }
         }
     }
-
     public void IsPlayer()
     {
         isPlayer = true;
@@ -298,21 +289,17 @@ public class Node : MonoBehaviour
     /*
      * CHAINLINK GAMEPLAY
      */
-
     public void StartChain()
     {
         GameManager.Instance.chainSelection.StartChain(this, currentBlock.BlockType);
         image.color = Color.blue; // Chain Start
     }
-
     public void StopChain()
     {
         GameManager.Instance.chainSelection.StopChain();
     }
-
     public void CheckChainBlockType()
     {
         GameManager.Instance.chainSelection.CheckBlockType(this);
     }
-
 }

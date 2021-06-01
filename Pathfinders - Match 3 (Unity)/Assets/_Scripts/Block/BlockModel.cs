@@ -18,6 +18,9 @@ public class BlockModel : MonoBehaviour
         Spirit
     }
 
+    /*
+     * MonoBehaviour
+     */
     private void Start()
     {
         int elementsAmount = Enum.GetValues(typeof(BLOCK_TYPE)).Length;
