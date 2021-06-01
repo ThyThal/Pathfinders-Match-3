@@ -29,7 +29,7 @@ public class ChainSelection : MonoBehaviour
     {
         if (chainedNodes.Contains(currentNode))
         {
-            chainedNodes[chainedNodes.Count - 1].image.color = Color.clear;
+            chainedNodes[chainedNodes.Count - 1].image.color = Color.clear; // Chain Remove Color.
             chainedNodes.RemoveAt(chainedNodes.Count - 1);
             PlayAudio(removeAudio);
         }
@@ -42,7 +42,7 @@ public class ChainSelection : MonoBehaviour
                 {
                     chainedNodes.Add(currentNode);
                     PlayAudio(addAudio);
-                    currentNode.image.color = Color.yellow;
+                    currentNode.image.color = Color.yellow; // Chain Added Block.
                 }
             }
         }
@@ -69,7 +69,7 @@ public class ChainSelection : MonoBehaviour
     {
         foreach (var node in chainedNodes)
         {
-            node.image.color = Color.clear;
+            //node.image.color = Color.clear;
             node.IsAir = true;
             node.CurrentBlock.DestroyBlock(true);
             node.CurrentBlock = null;
@@ -85,7 +85,7 @@ public class ChainSelection : MonoBehaviour
     {
         foreach (var item in chainedNodes)
         {
-            item.image.color = Color.clear;
+            item.image.color = Color.clear; // Chain Failed.
         }
     }
 

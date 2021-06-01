@@ -29,11 +29,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] public float turnsAmount = 5;
     [SerializeField] public int comboScore = 10;
 
+    [Header("Chains Configuration")]
+    [SerializeField] public bool enableChainedCombos = true;
+    [SerializeField] public int maxChainedCombo = 2;
+
     [Header("Extras")]
     [SerializeField] public Match3Grid match3Grid;
     [SerializeField] public GameOverScreen conditionScreen;
     [SerializeField] public ChainSelection chainSelection;
     [SerializeField] public AudioSource audioSource;
+    [SerializeField] public AudioSource helpSource;
+    [SerializeField] private AudioClip helpClip;
     [SerializeField] public bool startingChain;
     [SerializeField] public bool generatingRandomChains;
     [SerializeField] public bool fallingBlocks;
@@ -42,11 +48,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text textTurns;
     [SerializeField] private Text score;
     [SerializeField] public int scoreTotal;
+
+    public bool usedHelp;
+    private int originalChainedCombos;
     private float originalTurns;
     private int originalCombos;
 
     private void Start()
     {
+        originalChainedCombos = maxChainedCombo;
         originalCombos = maximumStartingCombos;
         originalTurns = turnsAmount;
         textTurns.text = $"{turnsAmount}";
@@ -56,6 +66,8 @@ public class GameManager : MonoBehaviour
 
     public void UseTurn()
     {
+        maxChainedCombo = originalChainedCombos;
+
         if (turnsAmount > 0)
         {
             turnsAmount--;
@@ -81,6 +93,7 @@ public class GameManager : MonoBehaviour
         // Variables
         startingChain = true;
         maximumStartingCombos = originalCombos;
+        maxChainedCombo = originalChainedCombos;
         turnsAmount = originalTurns;
         scoreTotal = 0;
         audioSource.pitch = 1;
@@ -92,5 +105,10 @@ public class GameManager : MonoBehaviour
         // Grid
         match3Grid.ResetGame();
         conditionScreen.HideMenu();
+    }
+
+    public void PlayHelpSound()
+    {
+        helpSource.PlayOneShot(helpClip);
     }
 }

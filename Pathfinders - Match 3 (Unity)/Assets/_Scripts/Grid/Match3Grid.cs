@@ -29,13 +29,12 @@ public class Match3Grid : MonoBehaviour
     [SerializeField] private float playerTurnTimer = 1f;
     [SerializeField] private float blockScreenTimer = 1f;
     [SerializeField] private bool endTurn = false;
+    [SerializeField] private List<Node> availableAux = new List<Node>();
 
     private Vector2 gridSize;
-
     private float originalFallTimer;
     private float originalBlockTimer;
 
-    [SerializeField] private List<Node> availableAux = new List<Node>();
 
     private void Start()
     {
@@ -95,6 +94,17 @@ public class Match3Grid : MonoBehaviour
     /*
      * Starting Grid Setup  
      */
+    IEnumerator CheckStartingChains()
+    {
+        yield return new WaitForSeconds(0.1f);
+        for (int i = gridNodeArray.Count - 1; i >= 0; i--)
+        {
+            gridNodeArray[i].CreateNewChain(false); // Check for chains and remove them.
+        }
+
+        GameManager.Instance.startingChain = false;
+        GenerateRandomChains();
+    }
     private void SpawnNodes()
     {
         for (int x = 0; x < gridSize.x; x++)
@@ -129,25 +139,11 @@ public class Match3Grid : MonoBehaviour
         var node = Instantiate(blockPrefab, nodeTransform);
         return node.GetComponent<BlockModel>();
     }
-
     public void CheckChains()
     {
         StartCoroutine(CheckStartingChains());
         availableAux = new List<Node>(gridNodeArray);
     }
-    IEnumerator CheckStartingChains()
-    {
-        yield return new WaitForSeconds(0.1f);
-        for (int i = gridNodeArray.Count - 1; i >= 0; i--)
-        {
-            gridNodeArray[i].CreateNewChain(false); // Check for chains and remove them.
-        }
-
-        GameManager.Instance.startingChain = false;
-        GenerateRandomChains();
-    }
-
-    [ContextMenu("RANDOMIZE")]
     private void GenerateRandomChains()
     {
         GameManager.Instance.generatingRandomChains = true;
@@ -166,65 +162,27 @@ public class Match3Grid : MonoBehaviour
         {
             GameManager.Instance.generatingRandomChains = false;
         }
-
-
-
     }
-
-
 
     /*
      * Main Gameplay Methods
      */
 
-    public void SearchFloating() // Used after user input.
-    {
-        StartCoroutine(SearchFloatingBlocks());
-    }
     IEnumerator SearchFloatingBlocks()
     {
         yield return new WaitForSeconds(fallingTimeAmount);
+        GameManager.Instance.usedHelp = false;
 
         for (int i = 0; i < gridNodeArray.Count; i++)
         {
             Node currentNode = gridNodeArray[i];
-            //currentNode.image.color = Color.clear;
+            currentNode.image.color = Color.clear;
             if (currentNode.HasSpaceBelow() && currentNode.IsAir == false)
             {
                 DoBlockFall(currentNode, currentNode.FallingLocation);
             }
         }
     }
-    private void DoBlockFall(Node start, Node finish)
-    {
-        start.ClearChainList();
-
-        if (start.CurrentBlock != null)
-        {
-            start.CurrentBlock.gameObject.transform.SetParent(finish.transform); // Sets new CurrentBlock Parent.
-            finish.CurrentBlock = finish.GetComponentInChildren<BlockModel>();
-            finish.CurrentBlock.GetComponent<RectTransform>().localPosition = Vector3.zero;
-            finish.IsAir = false;
-            start.IsAir = true;
-            start.CurrentBlock = null;
-
-            updatedFalling.Add(finish);
-        }
-    }
-
-    public void FindNewChains() // Used after falling
-    {
-        for (int i = 0; i < gridNodeArray.Count; i++)
-        {
-            gridNodeArray[i].CreateNewChain(false);
-        }
-    }
-
-    private void DoBlockRegeneration()
-    {
-        StartCoroutine(RegenerateBlocks());
-    }
-
     IEnumerator RegenerateBlocks()
     {
         yield return new WaitForSeconds(0.1f);
@@ -243,8 +201,47 @@ public class Match3Grid : MonoBehaviour
 
         CheckUpdatedNodes();
     }
+    IEnumerator UpdateFallChain(Node node)
+    {
+        yield return new WaitForSeconds(0.1f);
+        node.CreateNewChain(false);
+    }
+    IEnumerator FindFallingChains()
+    {
+        yield return new WaitForSeconds(0.1f);
+        FindChains();
+    }
+    public void SearchFloating() // Used after user input.
+    {
+        StartCoroutine(SearchFloatingBlocks());
+    }
+    private void DoBlockRegeneration()
+    {
+        StartCoroutine(RegenerateBlocks());
+    }
+    private void DoBlockFall(Node start, Node finish)
+    {
+        start.ClearChainList();
 
+        if (start.CurrentBlock != null)
+        {
+            start.CurrentBlock.gameObject.transform.SetParent(finish.transform); // Sets new CurrentBlock Parent.
+            finish.CurrentBlock = finish.GetComponentInChildren<BlockModel>();
+            finish.CurrentBlock.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            finish.IsAir = false;
+            start.IsAir = true;
+            start.CurrentBlock = null;
 
+            updatedFalling.Add(finish);
+        }
+    }
+    public void FindNewChains() // Used after falling
+    {
+        for (int i = 0; i < gridNodeArray.Count; i++)
+        {
+            gridNodeArray[i].CreateNewChain(false);
+        }
+    }
     private void CheckUpdatedNodes()
     {
         if (updatedFalling.Count > 0)
@@ -260,31 +257,38 @@ public class Match3Grid : MonoBehaviour
         updatedFalling.Clear();
     }
 
-    IEnumerator UpdateFallChain(Node node)
-    {
-        yield return new WaitForSeconds(0.1f);
-        node.CreateNewChain(false);
-    }
-
-    IEnumerator FindFallingChains()
-    {
-        yield return new WaitForSeconds(0.1f);
-        FindChains();
-    }
-
     /*
      * Debug Buttons
      */
-    public void FindChains()
+
+    [ContextMenu("Button Paint")]
+    public void PaintRandomChain()
     {
+        GameManager.Instance.usedHelp = true;
+
         for (int i = 0; i < gridNodeArray.Count; i++)
         {
-            //gridNodeArray[i].image.color = Color.clear;
+            gridNodeArray[i].HasChain = false;
             gridNodeArray[i].CreateNewChain(true);
         }
     }
 
-    [ContextMenu("Check No Chains")]
+    IEnumerator GameOverRoutine()
+    {
+        yield return new WaitForSeconds(0.1f);
+        //Debug.Log("Game Over");
+        GameManager.Instance.conditionScreen.gameObject.SetActive(true);
+        GameManager.Instance.conditionScreen.ShowMenu();
+        GameManager.Instance.audioSource.pitch = 1;
+        DeleteBlocks();
+    }
+    public void FindChains()
+    {
+        for (int i = 0; i < gridNodeArray.Count; i++)
+        {
+            gridNodeArray[i].CreateNewChain(true);
+        }
+    }
     private void CheckForLose()
     {
         bool foundChain = false;
@@ -293,6 +297,7 @@ public class Match3Grid : MonoBehaviour
         {
             for (int i = 0; i < gridNodeArray.Count; i++)
             {
+                
                 gridNodeArray[i].HasChain = false;
 
                 if (foundChain == false)
@@ -314,8 +319,6 @@ public class Match3Grid : MonoBehaviour
             //Debug.Log("No Hay Mas Turnos");
             GameOver();
         }
-
-
     }
 
     private void GameOver()
@@ -323,17 +326,6 @@ public class Match3Grid : MonoBehaviour
 
         StartCoroutine(GameOverRoutine());
     }
-
-    IEnumerator GameOverRoutine()
-    {
-        yield return new WaitForSeconds(0.1f);
-        //Debug.Log("Game Over");
-        GameManager.Instance.conditionScreen.gameObject.SetActive(true);
-        GameManager.Instance.conditionScreen.ShowMenu();
-        GameManager.Instance.audioSource.pitch = 1;
-        DeleteBlocks();
-    }
-
     private void DeleteBlocks()
     {
         for (int i = 0; i < gridNodeArray.Count; i++)
@@ -345,8 +337,6 @@ public class Match3Grid : MonoBehaviour
     /*
      * RESETING GAME
      */
-
-    [ContextMenu("Reset Game")]
     public void ResetGame()
     {
         // Timers
@@ -359,9 +349,7 @@ public class Match3Grid : MonoBehaviour
         // Spawning
         //SpawnNodes();
         ResetBlocks();
-    }
-
-    
+    }    
     private void ResetBlocks()
     {
         for (int i = 0; i < gridNodeArray.Count; i++)

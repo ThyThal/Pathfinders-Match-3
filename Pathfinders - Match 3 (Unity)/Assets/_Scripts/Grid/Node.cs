@@ -194,8 +194,11 @@ public class Node : MonoBehaviour
 
                     else
                     {
-                        
-                        ClearSuccessfulChain(chainList);
+                        if (GameManager.Instance.enableChainedCombos && GameManager.Instance.maxChainedCombo > 0)
+                        {
+                            GameManager.Instance.maxChainedCombo--;
+                            ClearSuccessfulChain(chainList);
+                        }
                     }
                 }
 
@@ -279,7 +282,10 @@ public class Node : MonoBehaviour
     {
         for (int i = 0; i < chain.Count; i++)
         {
-            //chain[i].image.color = Color.green;
+            if (GameManager.Instance.usedHelp == true)
+            {
+                chain[i].image.color = Color.gray; // Helping Paint.
+            }
         }
     }
 
@@ -296,7 +302,7 @@ public class Node : MonoBehaviour
     public void StartChain()
     {
         GameManager.Instance.chainSelection.StartChain(this, currentBlock.BlockType);
-        image.color = Color.green;
+        image.color = Color.blue; // Chain Start
     }
 
     public void StopChain()
