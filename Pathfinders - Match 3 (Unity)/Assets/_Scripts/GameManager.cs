@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class GameManager : MonoBehaviour
 {
@@ -178,5 +179,16 @@ public class GameManager : MonoBehaviour
     public void PlayHelpSound()
     {
         helpSource.PlayOneShot(helpClip);
+    }
+
+    /*
+     * Exit Game
+     */
+    public void OnClickExit()
+    {
+        #if UNITY_EDITOR
+        EditorApplication.ExitPlaymode();
+        #endif
+        Application.Quit();
     }
 }
