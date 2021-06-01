@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +7,9 @@ public class BlockView : MonoBehaviour
     [SerializeField] private List<Sprite> elementsImage;
     [SerializeField] private Image image;
 
+    /*
+     * Methods
+     */
     public void SelectSprite(BlockModel.BLOCK_TYPE blockType)
     {
         switch (blockType)

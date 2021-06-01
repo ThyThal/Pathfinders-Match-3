@@ -1,23 +1,11 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class BlockModel : MonoBehaviour
 {
-    [Header("Components")]
     [SerializeField] private BlockView blockView;
-
-    [Header("Main")]
     [SerializeField] private BLOCK_TYPE blockType;
-
-    public BLOCK_TYPE BlockType
-    {
-        get { return blockType; }
-        set { blockType = value; blockView.SelectSprite(BlockType); }
-    }
-
     public enum BLOCK_TYPE
     {
         Air,
@@ -34,10 +22,21 @@ public class BlockModel : MonoBehaviour
     {
         int elementsAmount = Enum.GetValues(typeof(BLOCK_TYPE)).Length;
         blockType = (BLOCK_TYPE)Random.Range(0, elementsAmount);
-
-        blockView.SelectSprite(blockType);
+        blockView.SelectSprite(BlockType);
     }
 
+    /*
+     * Properties
+     */
+    public BLOCK_TYPE BlockType
+    {
+        get { return blockType; }
+        set { blockType = value; blockView.SelectSprite(BlockType); }
+    }
+
+    /*
+     * Methods
+     */
     public void DestroyBlock(bool isPlayer)
     {
         if (isPlayer)
@@ -46,10 +45,6 @@ public class BlockModel : MonoBehaviour
         }
 
         GameManager.Instance.AddScore(GameManager.Instance.ComboScore / 4);
-
         Destroy(gameObject);
     }
-
-
-
 }
