@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ChainSelection : MonoBehaviour
@@ -16,7 +15,9 @@ public class ChainSelection : MonoBehaviour
     [SerializeField] private AudioClip addAudio;
     [SerializeField] private AudioClip errorAudio;
 
-
+    /*
+     * Methods
+     */
     public void StartChain(Node currentNode, BlockModel.BLOCK_TYPE currentType)
     {
         startedChain = true;
@@ -24,7 +25,6 @@ public class ChainSelection : MonoBehaviour
         chainedNodes.Add(currentNode);
         PlayAudio(addAudio);
     }
-
     public void CheckBlockType(Node currentNode)
     {
         if (chainedNodes.Contains(currentNode))
@@ -47,7 +47,6 @@ public class ChainSelection : MonoBehaviour
             }
         }
     }
-
     public void StopChain()
     {
         if (chainedNodes.Count >= GameManager.Instance.ChainComboAmount)
@@ -64,7 +63,6 @@ public class ChainSelection : MonoBehaviour
 
         chainedNodes.Clear();
     }
-
     public void RemoveFromChain()
     {
         foreach (var node in chainedNodes)
@@ -80,7 +78,6 @@ public class ChainSelection : MonoBehaviour
         GameManager.Instance.UseTurn();
         GameManager.Instance.match3Grid.isFalling = true;
     }
-
     private void RemovePaint()
     {
         foreach (var item in chainedNodes)
@@ -88,7 +85,6 @@ public class ChainSelection : MonoBehaviour
             item.image.color = Color.clear; // Chain Failed.
         }
     }
-
     private void PlayAudio(AudioClip audioClip)
     {
         audioSource.PlayOneShot(audioClip);
