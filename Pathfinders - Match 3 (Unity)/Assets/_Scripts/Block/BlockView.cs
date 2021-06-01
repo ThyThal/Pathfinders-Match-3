@@ -12,6 +12,8 @@ public class BlockView : MonoBehaviour
      */
     public void SelectSprite(BlockModel.BLOCK_TYPE blockType)
     {
+        GetComponent<RectTransform>().sizeDelta = new Vector2(GameManager.Instance.CellSize, GameManager.Instance.CellSize);
+
         switch (blockType)
         {
             case BlockModel.BLOCK_TYPE.Air:

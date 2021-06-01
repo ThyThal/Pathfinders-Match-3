@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Starting Configuration")]
     [SerializeField] private Vector2 gridSize = new Vector2(10, 10);//
+    [SerializeField] private int cellSize = 100;
     [SerializeField] private int maxStartingCombos = 3;//
     [SerializeField] private int chainComboAmount = 3;//
     [SerializeField] private float turnsAmount = 5;//
@@ -38,6 +39,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] public ChainSelection chainSelection;
     [SerializeField] public AudioSource audioSource;
     [SerializeField] public AudioSource helpSource;
+    [SerializeField] private RectTransform gridTransform;
+    [SerializeField] private Transform particlesScale;
+    [SerializeField] private RectTransform blockerTransform;
     [SerializeField] private AudioClip helpClip;//
     [SerializeField] private Text textTurns;//
     [SerializeField] private Text score;//
@@ -72,6 +76,10 @@ public class GameManager : MonoBehaviour
     public Vector2 GridSize
     {
         get { return gridSize; }
+    }
+    public float CellSize
+    {
+        get { return cellSize; }
     }
     public int ChainComboAmount
     {
@@ -179,6 +187,18 @@ public class GameManager : MonoBehaviour
     public void PlayHelpSound()
     {
         helpSource.PlayOneShot(helpClip);
+    }
+    public void SetGridBackgroundSize(Vector2 newSize)
+    {
+        // Background Size
+        gridTransform.sizeDelta = newSize;
+        blockerTransform.sizeDelta = newSize;
+
+        // Particles Scale
+        float defaultCellSize = 100;
+        float scale = (cellSize * defaultCellSize) / 10000;
+        Vector2 partScale = new Vector2(scale, scale);
+        particlesScale.localScale = partScale;
     }
 
     /*

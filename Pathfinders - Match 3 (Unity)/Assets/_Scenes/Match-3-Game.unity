@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 308770344}
   - component: {fileID: 308770343}
   m_Layer: 5
-  m_Name: '[] Grid Background'
+  m_Name: ===[] Grid Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -153,7 +153,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1694470115}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5422,7 +5422,7 @@ GameObject:
   - component: {fileID: 830361942}
   - component: {fileID: 830361941}
   m_Layer: 5
-  m_Name: =[] Grid
+  m_Name: ===[] Grid []===
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5440,7 +5440,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1694470115}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5490,7 +5490,6 @@ MonoBehaviour:
   blockScreen: {fileID: 685459071}
   nodePrefab: {fileID: 7038258005233320757, guid: c058261472f75cf4d95ed8261de976e0, type: 3}
   blockPrefab: {fileID: 3126525684326813032, guid: 0dedd225772a07f4fb7f7a8a85e98f73, type: 3}
-  cellSize: 100
   isFalling: 0
   fallingTimeAmount: 0.1
   updatedFalling: []
@@ -5801,7 +5800,7 @@ RectTransform:
   - {fileID: 491341402}
   - {fileID: 2042673317}
   m_Father: {fileID: 1694470115}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -5993,10 +5992,10 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 1478474644}
   - {fileID: 308770341}
-  - {fileID: 8430560430664807738}
   - {fileID: 830361938}
+  - {fileID: 1478474644}
+  - {fileID: 8430560430664807738}
   - {fileID: 685459068}
   - {fileID: 435434988}
   - {fileID: 2107791462}
@@ -6384,13 +6383,33 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8430560430175590922}
     - target: {fileID: 7237397958759087316, guid: 696a844c315f2474bac20bf91b7c6aea, type: 3}
+      propertyPath: gridSize.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7237397958759087316, guid: 696a844c315f2474bac20bf91b7c6aea, type: 3}
+      propertyPath: gridSize.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7237397958759087316, guid: 696a844c315f2474bac20bf91b7c6aea, type: 3}
       propertyPath: match3Grid
       value: 
       objectReference: {fileID: 830361940}
     - target: {fileID: 7237397958759087316, guid: 696a844c315f2474bac20bf91b7c6aea, type: 3}
+      propertyPath: gridTransform
+      value: 
+      objectReference: {fileID: 308770341}
+    - target: {fileID: 7237397958759087316, guid: 696a844c315f2474bac20bf91b7c6aea, type: 3}
+      propertyPath: particlesScale
+      value: 
+      objectReference: {fileID: 550123852}
+    - target: {fileID: 7237397958759087316, guid: 696a844c315f2474bac20bf91b7c6aea, type: 3}
       propertyPath: conditionScreen
       value: 
       objectReference: {fileID: 991259678}
+    - target: {fileID: 7237397958759087316, guid: 696a844c315f2474bac20bf91b7c6aea, type: 3}
+      propertyPath: blockerTransform
+      value: 
+      objectReference: {fileID: 685459068}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 696a844c315f2474bac20bf91b7c6aea, type: 3}
 --- !u!114 &5112184733145564861 stripped
@@ -6767,7 +6786,7 @@ RectTransform:
   - {fileID: 8430560430478522156}
   - {fileID: 875396116}
   m_Father: {fileID: 1694470115}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

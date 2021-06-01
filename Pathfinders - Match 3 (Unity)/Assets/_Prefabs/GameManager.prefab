@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSize: {x: 10, y: 10}
+  cellSize: 100
   maxStartingCombos: 3
   chainComboAmount: 3
   turnsAmount: 3
@@ -59,6 +60,9 @@ MonoBehaviour:
   chainSelection: {fileID: 8220859428773837411}
   audioSource: {fileID: 1901115538}
   helpSource: {fileID: 2632697488745991994}
+  gridTransform: {fileID: 0}
+  particlesScale: {fileID: 0}
+  blockerTransform: {fileID: 0}
   helpClip: {fileID: 8300000, guid: 4b4dd7245f6104c8c8eb07ccf6b386ed, type: 3}
   textTurns: {fileID: 0}
   score: {fileID: 0}

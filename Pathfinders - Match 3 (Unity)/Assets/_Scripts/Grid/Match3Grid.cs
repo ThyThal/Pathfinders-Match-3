@@ -18,7 +18,6 @@ public class Match3Grid : MonoBehaviour
     [SerializeField] private GameObject blockPrefab;
 
     [Header("Customize")]
-    [SerializeField] private int cellSize = 100;
     [SerializeField] private bool isFalling;//
     [SerializeField] private float fallingTimeAmount;
     [SerializeField] private List<Node> updatedFalling;
@@ -41,9 +40,11 @@ public class Match3Grid : MonoBehaviour
     {
         originalFallTimer = fallingTimeAmount;
         originalBlockTimer = blockScreenTimer;
-
+        var cellSize = GameManager.Instance.CellSize;
         gridSize = GameManager.Instance.GridSize;
+        gridLayoutGroup.cellSize = new Vector2(cellSize, cellSize);
         rectTransform.sizeDelta = new Vector2(gridSize.x * cellSize, gridSize.y * cellSize);
+        GameManager.Instance.SetGridBackgroundSize(new Vector2(20, 20) + rectTransform.sizeDelta);
         SpawnNodes();
     }
     private void Update()
@@ -212,9 +213,9 @@ public class Match3Grid : MonoBehaviour
     }
     private void SpawnNodes()
     {
-        for (int x = 0; x < gridSize.x; x++)
+        for (int x = 0; x < GameManager.Instance.GridSize.y; x++)
         {
-            for (int y = 0; y < gridSize.y; y++)
+            for (int y = 0; y < GameManager.Instance.GridSize.x; y++)
             {
                 var node = Instantiate(nodePrefab, gridLayoutGroup.transform);
                 node.name = "Node: " + $"[{x},{y}]";
